@@ -1,21 +1,41 @@
 const { ethers, network } = require("hardhat")
 const { moveBlocks } = require("../utils/move-blocks")
 
-const TOKEN_ID = 1
+const TOKEN_ID = 0 // SET THIS BEFORE RUNNING SCRIPT
 
 async function buyItem() {
+    const accounts = await ethers.getSigners()
     const refferalAddress = "0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199"
-    const nftStore = await ethers.getContract("NftStore")
-    const basicNft = await ethers.getContract("BasicNft")
-    const listing = await nftStore.getListing(basicNft.address, TOKEN_ID)
+
+    const [deployer, owner, buyer1] = accounts
+
+    const IDENTITIES = {
+        [deployer.address]: "DEPLOYER",
+        [owner.address]: "OWNER",
+        [buyer1.address]: "BUYER_1",
+    }
+
+    const nftMarketplaceContract = await ethers.getContract("NftStore")
+    const basicNftContract = await ethers.getContract("BasicNft")
+    console.log('basicNftContract: ', basicNftContract);
+
+    const listing = await nftMarketplaceContract
+       .getListing(basicNftContract.address, TOKEN_ID)
+
     const price = listing.price.toString()
-    // if its payable, you can send value as last argument
-    const tx = await nftStore.buyItem(basicNft.address, TOKEN_ID, refferalAddress, { value: price })
+    const tx = await nftMarketplaceContract
+        .connect(buyer1)
+        .buyItem(basicNftContract.address, TOKEN_ID, refferalAddress, {
+            value: price,
+        })
     await tx.wait(1)
     console.log("NFT Bought!")
-    if ((network.config.chainId == "31337")) {
-        await moveBlocks(2, (sleepAmount = 1000))
-    }
+
+    const newOwner = await basicNftContract.ownerOf(TOKEN_ID)
+    // New owner of Token ID ${TOKEN_ID} is ${newOwner} with identity of ${IDENTITIES[newOwner]}
+    console.log(
+        `New owner of Token ID ${TOKEN_ID} is ${newOwner} with identity of ${IDENTITIES[newOwner]}`
+    )
 }
 
 buyItem()

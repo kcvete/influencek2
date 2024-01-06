@@ -1,8 +1,15 @@
 const { ethers, network } = require("hardhat")
 const { moveBlocks } = require("../utils/move-blocks")
 
-const PRICE = ethers.utils.parseEther("0.1")
+// price in ETH between 0.1 and 0.8
+
+const PRICE = ethers.utils.parseEther((Math.floor(Math.random() * 8 + 1) / 10).toString())
+
 const refferalPercentage = 2;
+
+const images = ['https://i.imgur.com/wfR8wle.png', 'https://i.imgur.com/3sOpHdS.png', 'https://i.imgur.com/WRyW3LP.png']
+
+const randomImage = images[Math.floor(Math.random() * images.length)]
 
 async function mintAndList() {
     // list deployed contracts
@@ -11,12 +18,12 @@ async function mintAndList() {
     const randomNumber = Math.floor(Math.random() * 2)
     let basicNft
     if (randomNumber == 1) {
-        basicNft = await ethers.getContract("BasicNftTwo")
+        basicNft = await ethers.getContract("BasicNft")
     } else {
         basicNft = await ethers.getContract("BasicNft")
     }
     console.log("Minting NFT...")
-    const mintTx = await basicNft.mintNft()
+    const mintTx = await basicNft.mintNft(randomImage)
     const mintTxReceipt = await mintTx.wait(1)
     const tokenId = mintTxReceipt.events[0].args.tokenId
     console.log("Approving NFT...")

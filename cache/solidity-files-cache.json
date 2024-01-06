@@ -612,8 +612,8 @@
       ]
     },
     "/Users/kevincvetezar/influencek2/contracts/NftStore.sol": {
-      "lastModificationDate": 1703932369109,
-      "contentHash": "e87eecf0b875439d751720daa58fcde5",
+      "lastModificationDate": 1704371242456,
+      "contentHash": "af30ecd1a7a9b9df5d4df73c6e7515e6",
       "sourceName": "contracts/NftStore.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -648,7 +648,8 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "@openzeppelin/contracts/security/ReentrancyGuard.sol",
-        "hardhat/console.sol"
+        "hardhat/console.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol"
       ],
       "versionPragmas": [
         "^0.8.7"
@@ -1134,8 +1135,8 @@
       ]
     },
     "/Users/kevincvetezar/influencek2/contracts/test/BasicNftTwo.sol": {
-      "lastModificationDate": 1703932369109,
-      "contentHash": "937ab8678d343de2a973b04907bc695d",
+      "lastModificationDate": 1704364579349,
+      "contentHash": "3888a07aac5dd3bcba42b1c604f755f4",
       "sourceName": "contracts/test/BasicNftTwo.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -1178,8 +1179,8 @@
       ]
     },
     "/Users/kevincvetezar/influencek2/contracts/test/BasicNft.sol": {
-      "lastModificationDate": 1703932369109,
-      "contentHash": "47a362887c2fae24eb96dbb5c2e5c500",
+      "lastModificationDate": 1704382954349,
+      "contentHash": "760f71592963b822369b0c1622d15804",
       "sourceName": "contracts/test/BasicNft.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -1219,6 +1220,50 @@
       ],
       "artifacts": [
         "BasicNft"
+      ]
+    },
+    "/Users/kevincvetezar/influencek2/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
+      "lastModificationDate": 1703932365457,
+      "contentHash": "f4dd06783f321aa26179bc2b6e361c29",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Enumerable"
       ]
     }
   }

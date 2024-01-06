@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "hardhat/console.sol";
-
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 // Check out https://github.com/Fantom-foundation/Artion-Contracts/blob/5c90d2bc0401af6fb5abf35b860b762b31dfee02/contracts/FantomMarketplace.sol
 // For a full decentralized nft marketplace
 
@@ -73,8 +73,6 @@ contract NftStore is ReentrancyGuard {
     }
 
     modifier isListed(address nftAddress, uint256 tokenId) {
-        console.log('tokenId: ', tokenId);
-        console.log('nftAddress: ', nftAddress);
         Listing memory listing = s_listings[nftAddress][tokenId];
             console.log('listing.price : ', listing.price );
         if (listing.price <= 0) {
@@ -131,10 +129,6 @@ contract NftStore is ReentrancyGuard {
         notListed(nftAddress, tokenId)
         isOwner(nftAddress, tokenId, msg.sender)
     {
-        console.log('tokenId: ', tokenId);
-        console.log('nftAddress: ', nftAddress);
-        console.log('price: ', price);
-        console.log('_percentage: ', _percentage);
         if (price <= 0) {
             revert PriceMustBeAboveZero();
         }
@@ -178,9 +172,12 @@ contract NftStore is ReentrancyGuard {
         nonReentrant
     {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
+        console.log(tokenId, listedItem.price, msg.value);
+
         if (msg.value < listedItem.price) {
             revert PriceNotMet(nftAddress, tokenId, listedItem.price);
         }
+
         // Send referral percentage to the referrer
         uint256 referralPercentage = s_referralPercentages[nftAddress];
 
@@ -249,7 +246,43 @@ contract NftStore is ReentrancyGuard {
         view
         returns (Listing memory)
     {
+        uint256 tokenCount = IERC721(nftAddress).balanceOf(address(this));
+        console.log('tokenCount: ', tokenCount);
         return s_listings[nftAddress][tokenId];
+    }
+
+    function getListings(address nftAddress)
+        external
+        view
+        returns (Listing[] memory)
+    {
+        uint256 tokenCount = IERC721(nftAddress).balanceOf(address(this));
+        console.log('tokenCount: ', tokenCount);
+        Listing[] memory listings = new Listing[](tokenCount);
+        for (uint256 i = 0; i < tokenCount; i++) {
+            uint256 tokenId = IERC721Enumerable(nftAddress).tokenOfOwnerByIndex(
+                address(this),
+                i
+            );
+            listings[i] = s_listings[nftAddress][tokenId];
+        }
+        return listings;
+    }
+
+    function getAllListings()
+        external
+        view
+        returns (Listing[] memory)
+    {
+        uint256 tokenCount = IERC721Enumerable(address(this)).totalSupply();
+        console.log('address(this): ', address(this));
+        console.log('tokenCount: ', tokenCount);
+        Listing[] memory listings = new Listing[](tokenCount);
+        for (uint256 i = 0; i < tokenCount; i++) {
+            uint256 tokenId = IERC721Enumerable(address(this)).tokenByIndex(i);
+            listings[i] = s_listings[address(this)][tokenId];
+        }
+        return listings;
     }
 
     function getProceeds(address seller) external view returns (uint256) {
