@@ -253,7 +253,7 @@ export class Dapp extends React.Component {
   // in the component state.
   async _getTokenData() {
     const name = 'nft store' // await this._nftStore.name();
-    const symbol = '@' //await this._nftStore.symbol();
+    const symbol = 'ETH' //await this._nftStore.symbol();
 
     this.setState({ tokenData: { name, symbol } });
   }

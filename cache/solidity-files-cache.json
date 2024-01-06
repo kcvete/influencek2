@@ -612,8 +612,8 @@
       ]
     },
     "/Users/kevincvetezar/influencek2/contracts/NftStore.sol": {
-      "lastModificationDate": 1704371242456,
-      "contentHash": "af30ecd1a7a9b9df5d4df73c6e7515e6",
+      "lastModificationDate": 1704539742487,
+      "contentHash": "6eab6378fb2623ef963462f132371fec",
       "sourceName": "contracts/NftStore.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -1264,6 +1264,53 @@
       ],
       "artifacts": [
         "IERC721Enumerable"
+      ]
+    },
+    "/Users/kevincvetezar/influencek2/contracts/InfluencerMarketing.sol": {
+      "lastModificationDate": 1704558863672,
+      "contentHash": "9f11e32bbd6ca96546e59b81f251779c",
+      "sourceName": "contracts/InfluencerMarketing.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "hardhat/console.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "InfluencerMarketing"
       ]
     }
   }

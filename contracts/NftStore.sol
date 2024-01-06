@@ -48,9 +48,15 @@ contract NftStore is ReentrancyGuard {
     );
 
     mapping(address => mapping(uint256 => Listing)) private s_listings;
+    // save the address of the seller
+    mapping(address => address) private s_sellers;
+
     mapping(address => uint256) private s_proceeds;
     // list of percentages for each address, 0 is the default
     mapping(address => uint256) private s_referralPercentages;
+
+    // count of listed products
+    uint256 private s_listedProductsCount;
 
 
     modifier notListed(
@@ -74,7 +80,6 @@ contract NftStore is ReentrancyGuard {
 
     modifier isListed(address nftAddress, uint256 tokenId) {
         Listing memory listing = s_listings[nftAddress][tokenId];
-            console.log('listing.price : ', listing.price );
         if (listing.price <= 0) {
             revert NotListed(nftAddress, tokenId);
         }
@@ -93,23 +98,6 @@ contract NftStore is ReentrancyGuard {
         }
         _;
     }
-
-    // IsNotOwner Modifier - Nft Owner can't buy his/her NFT
-    // Modifies buyItem function
-    // Owner should only list, cancel listing or update listing
-    /* modifier isNotOwner(
-        address nftAddress,
-        uint256 tokenId,
-        address spender
-    ) {
-        IERC721 nft = IERC721(nftAddress);
-        address owner = nft.ownerOf(tokenId);
-        if (spender == owner) {
-            revert IsNotOwner();
-        }
-        _;
-    } */
-
     /////////////////////
     // Main Functions //
     /////////////////////
@@ -137,6 +125,8 @@ contract NftStore is ReentrancyGuard {
             revert NotApprovedForMarketplace();
         }
         s_listings[nftAddress][tokenId] = Listing(price, msg.sender);
+
+
         s_referralPercentages[nftAddress] = _percentage;
         emit ItemListed(msg.sender, nftAddress, tokenId, price, _percentage);
     }
@@ -251,39 +241,6 @@ contract NftStore is ReentrancyGuard {
         return s_listings[nftAddress][tokenId];
     }
 
-    function getListings(address nftAddress)
-        external
-        view
-        returns (Listing[] memory)
-    {
-        uint256 tokenCount = IERC721(nftAddress).balanceOf(address(this));
-        console.log('tokenCount: ', tokenCount);
-        Listing[] memory listings = new Listing[](tokenCount);
-        for (uint256 i = 0; i < tokenCount; i++) {
-            uint256 tokenId = IERC721Enumerable(nftAddress).tokenOfOwnerByIndex(
-                address(this),
-                i
-            );
-            listings[i] = s_listings[nftAddress][tokenId];
-        }
-        return listings;
-    }
-
-    function getAllListings()
-        external
-        view
-        returns (Listing[] memory)
-    {
-        uint256 tokenCount = IERC721Enumerable(address(this)).totalSupply();
-        console.log('address(this): ', address(this));
-        console.log('tokenCount: ', tokenCount);
-        Listing[] memory listings = new Listing[](tokenCount);
-        for (uint256 i = 0; i < tokenCount; i++) {
-            uint256 tokenId = IERC721Enumerable(address(this)).tokenByIndex(i);
-            listings[i] = s_listings[address(this)][tokenId];
-        }
-        return listings;
-    }
 
     function getProceeds(address seller) external view returns (uint256) {
         return s_proceeds[seller];
